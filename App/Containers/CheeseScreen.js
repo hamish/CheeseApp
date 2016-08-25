@@ -73,7 +73,7 @@ class CheeseScreen extends React.Component {
 
       <ScrollView style={[styles.container, {height: this.state.visibleHeight}]}>
         <Clock text={this.state.num}></Clock>
-        <ClockControlButton onPress={() => { this.setState(this.state ...{num:this.state.num+1});
+        <ClockControlButton onPress={() => { this.setState({num:this.state.num+1});
           }}></ClockControlButton>
       </ScrollView>
       </View>
