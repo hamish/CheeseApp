@@ -19,14 +19,25 @@ import styles from './Styles/CheeseScreenStyle'
 // I18n
 import I18n from '../I18n/I18n.js'
 
+
 class CheeseScreen extends React.Component {
 
   constructor (props) {
     super(props)
+    var timeStamp = Math.floor(Date.now() / 1000);
+
     this.state = {
       visibleHeight: Metrics.screenHeight,
-      num:0
+      startTime: timeStamp,
+      secondsSinceStart: 0
     }
+    setInterval(
+      ()=>{
+        var now = Math.floor(Date.now() / 1000);
+        var sss = now - this.state.startTime;
+
+        this.setState({secondsSinceStart:sss})
+      }, 100);
   }
 
   static propTypes = {
@@ -72,9 +83,12 @@ class CheeseScreen extends React.Component {
         <Image source={Images.background} style={styles.backgroundImage} resizeMode='stretch' />
 
       <ScrollView style={[styles.container, {height: this.state.visibleHeight}]}>
-        <Clock text={this.state.num}></Clock>
-        <ClockControlButton onPress={() => { this.setState({num:this.state.num+1});
-          }}></ClockControlButton>
+        <Clock text={this.state.secondsSinceStart}></Clock>
+        <ClockControlButton onPress={
+          () => { 
+            this.setState({secondsSinceStart:this.state.secondsSinceStart+1});
+          }
+        }></ClockControlButton>
       </ScrollView>
       </View>
     )
