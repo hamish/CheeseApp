@@ -28,16 +28,61 @@ class CheeseScreen extends React.Component {
 
     this.state = {
       visibleHeight: Metrics.screenHeight,
-      startTime: timeStamp,
-      secondsSinceStart: 0
+      secondsSinceStart: 0, 
+      secondsRemaining: 0,
+      timerStatus: "STOPPED" // STOPPED, COUNTUP, COUNTDOWN
     }
     setInterval(
       ()=>{
-        var now = Math.floor(Date.now() / 1000);
-        var sss = now - this.state.startTime;
+        switch(this.state.timerStatus) {
+          case "STOPPED":
+            break;
+          case "COUNTUP":
+            var now = Math.floor(Date.now() / 1000);
+            var sss = now - this.state.startTime;
 
-        this.setState({secondsSinceStart:sss})
+            this.setState({secondsSinceStart:sss})
+            break;
+          case "COUNTDOWN":
+            var now = Math.floor(Date.now() / 1000);
+            var sscd = now - this.state.countDownTimerStart;
+            var sr = Math.floor(this.state.floculationDuration * 1.5 - sscd);
+            var newState={secondsRemaining:sr}
+            if (sr == 0) {
+              newState.timerStatus="STOPPED"
+            }
+            this.setState(newState);
+            break;
+        }
       }, 100);
+  }
+
+  buttonPress() {
+    switch (this.state.timerStatus) {
+      case "STOPPED":
+        var now = Math.floor(Date.now() / 1000);
+        this.setState({
+          startTime: now,
+          timerStatus: "COUNTUP",
+          secondsSinceStart: 0,
+          secondsRemaining: 0
+        })
+        break;
+      case "COUNTUP":
+        this.setState({
+          timerStatus: "COUNTDOWN",
+          countDownTimerStart: Math.floor(Date.now() / 1000),
+          floculationDuration: this.state.secondsSinceStart
+        })
+        break;
+      case "COUNTDOWN":
+        this.setState({
+          secondsSinceStart: 0,
+          secondsRemaining: 0,
+          timerStatus: "STOPPED"
+        })
+        break;
+    }
   }
 
   static propTypes = {
@@ -77,6 +122,7 @@ class CheeseScreen extends React.Component {
       visibleHeight: Metrics.screenHeight
     })
   }
+
   render () {
     return (
       <View style={styles.mainContainer}>
@@ -84,11 +130,12 @@ class CheeseScreen extends React.Component {
 
       <ScrollView style={[styles.container, {height: this.state.visibleHeight}]}>
         <Clock text={this.state.secondsSinceStart}></Clock>
+        <Clock text={this.state.secondsRemaining}></Clock>
         <ClockControlButton onPress={
           () => { 
-            this.setState({secondsSinceStart:this.state.secondsSinceStart+1});
+            this.buttonPress(); // setState({secondsSinceStart:this.state.secondsSinceStart+1});
           }
-        }></ClockControlButton>
+        } label={this.state.timerStatus}></ClockControlButton>
       </ScrollView>
       </View>
     )
