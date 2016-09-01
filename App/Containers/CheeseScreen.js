@@ -77,8 +77,6 @@ class CheeseScreen extends React.Component {
         break;
       case "COUNTDOWN":
         this.setState({
-          secondsSinceStart: 0,
-          secondsRemaining: 0,
           timerStatus: "STOPPED"
         })
         break;
@@ -131,11 +129,15 @@ class CheeseScreen extends React.Component {
       <ScrollView style={[styles.container, {height: this.state.visibleHeight}]}>
         <Clock text={this.state.secondsSinceStart}></Clock>
         <Clock text={this.state.secondsRemaining}></Clock>
-        <ClockControlButton onPress={
-          () => { 
-            this.buttonPress(); // setState({secondsSinceStart:this.state.secondsSinceStart+1});
-          }
-        } label={this.state.timerStatus}></ClockControlButton>
+        <ClockControlButton 
+            onPress={
+              () => { 
+                this.buttonPress(); // setState({secondsSinceStart:this.state.secondsSinceStart+1});
+              }
+            } 
+            label={this.state.timerStatus}
+            disabled={this.state.timerStatus == "COUNTDOWN" ? true : false}
+        ></ClockControlButton>
       </ScrollView>
       </View>
     )

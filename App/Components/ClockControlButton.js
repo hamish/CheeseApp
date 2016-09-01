@@ -18,8 +18,8 @@ export default class ClockControlButton extends React.Component {
   render () {
     return (
       <View style={styles.container}>
-      <TouchableOpacity style={styles.button} onPress={this.props.onPress}>
-        <Text style={styles.buttonText}>{this.props.label}</Text>
+      <TouchableOpacity disabled={this.props.disabled} activeOpacity={this.props.disabled ? 0.5 : 1} style={styles.button} onPress={this.props.onPress}>
+        <Text activeOpacity={this.props.disabled ? 0.5 : 1} style={styles.buttonText}>{this.props.label}</Text>
       </TouchableOpacity>
 
 
